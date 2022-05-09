@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block con %}
+{% load mathfilters %}
+
+    <div class ="container mt-5 mb-5">
+        <h2><b>{{ t.subject }}</b></h2>
+        <div class="row mt-5">
+            <div class="col-lg-8">
+                <textarea class="form-control" style="height: 250px; font-size: 20px;" disabled>{{ t.content }}</textarea>
+
+            </div>
+            <div class="col-lg-4">
+                <img src="{{ t.maker.getpic }}" width="100%">
+                <div class="mt-3 text-center">
+                    <h5><b>{{ t.maker }}</b></h5>
+                </div>
+                <div class="text-end">
+                    <h6>{{ t.pubdate | date:'Y년 n월 j일 H:i' }}</h6>
+                </div>
+            </div>
+        </div>
+
+        {% if user in t.voter.all %}
+            <div class="row mt-3">
+                <div class="text-end">
+                    <a class="btn btn-danger btn-lg" href="{% url 'vote:cancel' t.id %}">Cancel</a>
+                </div>
+                <div class="text-end mt-3">
+                    <a href="{% url 'vote:index' %}"><button class="btn btn-dark">뒤로가기</button></a>
+                </div>
+                {% for i in cset %}
+                    <div class="col-lg-4 mt-3">
+                        <img src="{{ i.pic.url }}" width="100%">
+                            <div class="text-center mt-3 mb-3">
+                                <h5><b>{{ i.name }}</b></h5>                    
+                            </div>
+
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ i.choicer.count|div:t.voter.count|mul:100 }}%;">{{ i.choicer.count|div:t.voter.count|mul:100}}%</div>
+                            </div>
+                        <textarea class="form-control" style="height: 20px;" disabled>{{ i.con }}</textarea>
+                    </div>
+                {% endfor %}
+            </div>
+ 
+        {% else %}
+
+            <form method="post" action="{% url 'vote:vote' t.id%}">
+                {% csrf_token %}
+                <div class="row mt-5">
+                    <div class="text-end">
+                        <button class="btn btn-dark btn-lg">Select</button>
+                    </div>
+                    <div class="text-end mt-3">
+                        <a href="{% url 'vote:index' %}"><button class="btn btn-dark">뒤로가기</button></a>
+                    </div>
+                    {% for i in cset %}
+                        <div class="col-lg-4 mt-3">
+                            <img src="{{ i.pic.url }}" width="100%">
+                            <div class="text-center mt-3 mb-3">
+                                <div class="form-check">
+                                    <label class="form-check-label" for="flexRadioDefault1">
+                                        <h5><b>{{ i.name }}</b></h5>
+                                    </label>
+                                    <input class="form-check-input" type="radio" {% if forloop.first %} checked {% endif %} name="cho" value="{{i.id}}" id="flexRadioDefault1">                                
+                                </div>                     
+                            </div>
+                            <textarea class="form-control" style="height: 20px;" disabled>{{ i.con }}</textarea>
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+                
+            </form>
+        {% endif %}
+
+
+
+    </div>
+
+
+
+{% endblock%}
+

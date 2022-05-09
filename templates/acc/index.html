@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block con %}
+<div class="p-5 mb-4 bg-light rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">{{ user }}</h1>
+        <p class="col-md-8 fs-4"> Welcome {{user}}</p>
+        <a href="{% url 'acc:profile' %}"><button class="btn btn-dark btn-lg" type="button" style="font-weight: bold;">Profile 바로가기</button></a>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block noauth %}
+        <div class="container mt-5 mb-5 text-center">
+            <h1><b>Login Please</b></h1>
+            <div class="mt-5">
+                <a class="btn btn-dark btn-lg" href="{% url 'acc:login' %}">LOGIN</a>
+                <a class="btn btn-dark btn-lg" href="{% url 'acc:signup' %}">SIGNUP</a>
+            </div>
+
+        </div>
+
+        {% endblock %}
